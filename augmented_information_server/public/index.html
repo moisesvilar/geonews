@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//HbbTV//1.1.1//EN" "http://www.hbbtv.org/dtd/HbbTV-1.1.1.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+    <meta http-equiv="content-type" content="Content-Type: application/vnd.hbbtv.xhtml+xml; charset=UTF-8" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <link rel="stylesheet" type="text/css" href="vendor/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="vendor/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" type="text/css" href="styles/index.css"/>
+    <link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Rokkitt'>
+
+    <script type="text/javascript" src="vendor/js/hbbtvlib.js"></script>
+    <script type="text/javascript" src="vendor/js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="vendor/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="controllers/index.js"></script>
+    <script type="text/javascript" src="utils/hbbtv-utils.js"></script>
+</head>
+
+<body>
+    <div style="visibility: hidden; height: 0; width: 0; position: absolute;">
+        <object type="application/oipfApplicationManager" id="oipfAppMan"> </object>
+        <object type="application/oipfConfiguration" id="oipfConfig"> </object>
+    </div>
+
+    <div class="container">
+        <h2>Pulse el botón <span class="red-button">rojo</span> de su mando para consultar información adicional a la noticias.</h2>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            new IndexController();
+        });
+    </script>
+</body>
+</html> 

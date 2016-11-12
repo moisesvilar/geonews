@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//HbbTV//1.1.1//EN" "http://www.hbbtv.org/dtd/HbbTV-1.1.1.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+    <meta http-equiv="content-type" content="Content-Type: application/vnd.hbbtv.xhtml+xml; charset=UTF-8" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <link rel="stylesheet" type="text/css" href="../vendor/css/leaflet.css" />
+	<link rel="stylesheet" type="text/css" href="../vendor/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../vendor/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../styles/main.css"/>
+
+    <script type="text/javascript" src="../vendor/js/leaflet.js"></script>
+    <script type="text/javascript" src="../vendor/js/hbbtvlib.js"></script>
+    <script type="text/javascript" src="../vendor/js/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="../vendor/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../vendor/js/socket.io.js"></script>
+    <script type="text/javascript" src="../controllers/main.js"></script>
+    <script type="text/javascript" src="../utils/hbbtv-utils.js"></script>
+</head>
+
+<body onload="start()">
+
+    <div style="z-index: 0; position: absolute; top: 60px; left:65px;" id="vidCont">
+        <object id="video" type="video/broadcast" style="width: 250%; height: 50%;"> </object>
+    </div>
+    <div style="visibility: hidden; display: none;">
+        <object type="application/oipfApplicationManager" id="appMgr">  </object>
+    </div>
+
+	<div style="position: relative; height: 300px;">
+		<div class="legend" style="position: absolute; top: 450px; left: 100px; width: 100%;">
+			<h2>Leyenda</h2>
+			<div class="row">
+				<div class="col-md-1">
+					<strong>Flechas</strong>:
+				</div>
+				<div class="col-md-2">
+					Navegar
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-1">
+					<strong>1</strong>:
+				</div>
+				<div class="col-md-2">
+					Alejar
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-1">
+					<strong>3</strong>:
+				</div>
+				<div class="col-md-2">
+					Acercar
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-1">
+					<strong>Botón <span class="red_button">rojo</span></strong>:
+				</div>
+				<div class="col-md-2">
+					Ocultar mapa
+				</div>
+			</div>
+		</div>
+		<div id="map" style=""></div>
+	</div>
+	
+    <script>
+        function start() {
+            new MainController();
+        }
+    </script>
+</body>
+</html> 

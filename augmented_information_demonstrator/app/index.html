@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head lang="es">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demostrador información geográfica</title>
+
+    <link rel="stylesheet" href="css/vendor/foundation.min.css">
+    <link rel="stylesheet" href="css/vendor/normalize.css">
+    <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css"/>
+    <link rel="stylesheet" href="css/app.css">
+
+    <script src="bower_components/modernizr/modernizr.js"></script>
+</head>
+<body>
+
+<div class="row">
+    <header class="text-center small-12 large-12 columns">
+        <h1>Demostrador información geográfica</h1>
+    </header>
+</div>
+
+<div class="container" ng-controller="maincontroller">
+
+    <div class="row">
+        <div class="small-12 large-5 columns">
+            <h3>Informativos</h3>
+
+            <div class="list-news" ng-controller="newscontroller">
+                <table>
+                    <tbody>
+                    <tr ng-repeat="new in news">
+                        <td><a href="#" ng-click="onNewClick(new)">{{new.title}}</a></td>
+                    </tr>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3>Controles</h3>
+
+            <div class="controls">
+                <h4>Extractor de términos</h4>
+
+                <div class="text-center">
+                    <input type="radio" name="terms_extractor" value="adega" id="terms_extractor-adega"
+                           ng-model="terms_extractor" default><label
+                        for="terms_extractor-adega">Adega</label>
+                    <input type="radio" name="terms_extractor" value="stanford" id="terms_extractor-stanford"
+                           ng-model="terms_extractor"><label
+                        for="terms_extractor-adega">Stanford NLP</label>
+                </div>
+                <h4>Geocodificación</h4>
+
+                <div class="text-center">
+                    <input type="radio" name="geocoding" value="geonames" id="geocoding-geonames"
+                           ng-model="geocoding" default><label
+                        for="geocoding-geonames">Geonames</label>
+                    <input type="radio" name="geocoding" value="openstreetmaps" id="geocoding-openstreetmaps"
+                           ng-model="geocoding"><label
+                        for="geocoding-openstreetmaps">Open Street Maps</label>
+                </div>
+                <h4>Calcular bounding box</h4>
+
+                <div>
+                    <p>
+                    <input type="radio" name="getBoundingBox" value="perimeter" id="getBoundingBox-perimeter"
+                           ng-model="getBoundingBox" default><label
+                        for="getBoundingBox-perimeter">Por perímetro</label>
+                    </p>
+                    <p>
+                    <input type="radio" name="getBoundingBox" value="area" id="getBoundingBox-area"
+                           ng-model="getBoundingBox"><label
+                        for="getBoundingBox-area">Por área</label>
+                    </p>
+                    <p>
+                    <input type="radio" name="getBoundingBox" value="distance-area" id="getBoundingBox-distance-area"
+                           ng-model="getBoundingBox"><label
+                        for="getBoundingBox-distance-area">Por distancia y área</label>
+                    </p>
+                    <p>
+                    <input type="radio" name="getBoundingBox" value="area" id="getBoundingBox-distance-perimeter"
+                           ng-model="getBoundingBox"><label
+                        for="getBoundingBox-distance-perimeter">Por distancia y perímetro</label>
+                    </p>
+                    <p>
+                    <input type="radio" name="getBoundingBox" value="aspect_area" id="getBoundingBox-aspect-area"
+                           ng-model="getBoundingBox"><label
+                        for="getBoundingBox-aspect-area">Por aspecto y área</label>
+                    </p>
+                    <p>
+                        <input type="radio" name="getBoundingBox" value="aspect_perimeter" id="getBoundingBox-aspect-perimeter"
+                               ng-model="getBoundingBox"><label
+                            for="getBoundingBox-aspect-perimeter">Por aspecto y perímetro</label>
+                    </p>
+                </div>
+                <h4>Velocidad de subtítulos</h4>
+
+                <div class="text-center">
+                    <input type="radio" name="speed" value="1" id="speed-1" ng-model="speed" default><label
+                        for="speed-1">x1</label>
+                    <input type="radio" name="speed" value="2" id="speed-2" ng-model="speed"><label
+                        for="speed-2">x2</label>
+                    <input type="radio" name="speed" value="3" id="speed-3" ng-model="speed"><label
+                        for="speed-3">x3</label>
+                </div>
+                <h4>Clustering de subtítulos</h4>
+
+                <div class="small-6 columns">
+                    <input type="number" placeholder="número de subtítulos" ng-model="clustering"/>
+                </div>
+                <div class="small-6 columns">
+                    <span class="postfix">subtítulos</span>
+                </div>
+            </div>
+        </div>
+        <div class="small-12 large-7 columns" ng-show="selectedNew">
+            <h2>{{selectedNew.title}}</h2>
+            <small><a href="{{selectedNew.url}}" target="_blank">Ver en RTVE >></a></small>
+            <div id="subtitles" class="panel callout radius">
+                <h3>Subtítulos</h3>
+                <small><strong>Velocidad</strong>: x{{speed}}</small>
+                <small><strong>Tiempo</strong>: {{currentSecond}} segundos</small>
+                <p id="subtitle" class="text-center">{{currentSubtitle.text}}</p>
+            </div>
+            <div class="clearfix">
+                <a ng-click="pauseOrPlay()" ng-disabled="isProcessing() && !allProcessed()"
+                   class="button small round left">{{pauseOrPlayToString()}}</a>
+                <span class="left text-center">{{processingStr}}</span>
+                <a ng-click="processAll()" ng-disabled="isProcessing()" class="button small round alert right">{{processLabel}}</a>
+            </div>
+            <div id="map"></div>
+            <table class="geodata" ng-repeat="data in geodata | reverse">
+                <thead>
+                <tr>
+                    <th width="20%">#{{data.sec}}</th>
+                    <th width="80%"><a href="#map" ng-click="updateMap(data)">{{data.term}}</a></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th>Texto</th>
+                    <td>{{data.text}}</td>
+                </tr>
+                <tr>
+                    <th>Nombre</th>
+                    <td>{{data.name}}</td>
+                </tr>
+                <tr>
+                    <th>País</th>
+                    <td>{{data.country}}</td>
+                </tr>
+                <tr>
+                    <th>Región</th>
+                    <td>{{data.admin}}</td>
+                </tr>
+                <tr>
+                    <th>Coordenadas</th>
+                    <td><a href="https://www.google.es/maps/place//@{{data.lat}},{{data.lon}},10z"
+                           target="_blank">{{data.lat}},
+                        {{data.lon}}</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/fastclick/lib/fastclick.js"></script>
+<script src="bower_components/angular/angular.min.js"></script>
+<script src="bower_components/angular-resource/angular-resource.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+<script src="bower_components/checklist-model/checklist-model.js"></script>
+<script src="bower_components/angular-percentage-filter/percentage.js"></script>
+<script src="bower_components/foundation/js/foundation.min.js"></script>
+<script src="bower_components/foundation/js/foundation/foundation.slider.js"></script>
+<script src="bower_components/leaflet/dist/leaflet.js"></script>
+<script src="bower_components/ng-csv/build/ng-csv.min.js"></script>
+<script src="js/app.js"></script>
+<script src="js/controllers/maincontroller.js"></script>
+<script src="js/controllers/newscontroller.js"></script>
+<script src="js/values/urls.js"></script>
+<script src="js/factories/new.js"></script>
+<script src="js/factories/timer.js"></script>
+<script src="js/factories/augmented_information.js"></script>
+<script src="js/factories/subtitles.js"></script>
+<script src="js/filters/reverse.js"></script>
+<script>
+    $(document).foundation();
+</script>
+</body>
+</html>

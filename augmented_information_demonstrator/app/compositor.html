@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head lang="es">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compositor de mapas para informativos</title>
+
+    <link rel="stylesheet" href="css/vendor/foundation.min.css">
+    <link rel="stylesheet" href="css/vendor/normalize.css">
+    <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css"/>
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body ng-controller="compositorcontroller">
+
+<div class="container">
+    <div class="row">
+        <div class="small-12 large-5 columns">
+            <h3>Informativos</h3>
+
+            <div class="list-news" ng-controller="geodatanewscontroller">
+                <table>
+                    <tbody>
+                    <tr ng-repeat="new in news">
+                        <td><a href="" ng-click="onNewClick(new)">{{new.title}}</a></td>
+                        <td><img ng-src="{{getIconForNew(new)}}"/></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="controls" ng-show="playing">
+                <h4>Velocidad de subtítulos</h4>
+
+                <div class="text-center">
+                    <input type="radio" name="speed" value="1" id="speed-1" ng-model="speed" default>
+                    <label for="speed-1">x1</label>
+                    <input type="radio" name="speed" value="2" id="speed-2" ng-model="speed">
+                    <label for="speed-2">x2</label>
+                    <input type="radio" name="speed" value="3" id="speed-3" ng-model="speed">
+                    <label for="speed-3">x3</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="small-12 large-7 columns" ng-show="selectedNew">
+            <h2>{{selectedNew.title}}</h2>
+
+            <div class="row">
+                <div class="small-4 columns">
+                    <small><a href="{{selectedNew.url}}" target="_blank">Ver en RTVE >></a></small>
+                </div>
+                <div class="small-4 columns">
+                    <a href="" ng-click="markAsCompleted()" class="button expand alert" ng-hide="playing">{{isCompletedToString()}}</a>
+                </div>
+                <div class="small-4 columns">
+                    <a href="" ng-click="pauseOrPlay()" class="button expand">{{pauseOrPlayToString()}}</a>
+                </div>
+            </div>
+            <div class="panel text-center">
+                <p>
+                    <strong>Subtítulo #{{subtitleIndex}} ({{currentSubtitle.ns}})</strong>
+                    <a ng-href="#{{currentSubtitle.ns}}" ng-hide="playing">Ir a lista >></a>
+                </p>
+                <small>{{totalSubtitles}} en total</small>
+                <div ng-show="playing">
+                    <small><strong>Velocidad</strong>: x{{speed}}</small>
+                    <small><strong>Tiempo</strong>: {{currentSecond}} segundos</small>
+                </div>
+            </div>
+            <div class="subtitles row">
+                <div class="small-3 columns" ng-hide="playing">
+                    <a href="" ng-click="previous()"><img src="resources/images/triangle-left.png" class="left"/></a>
+                </div>
+                <div class="panel columns text-center" ng-class="{'small-6': !playing, 'small-12': playing}">
+                    <p id="subtitle">{{currentSubtitle.text}}</p>
+                </div>
+                <div class="small-3 columns" ng-hide="playing">
+                    <a href="" ng-click="next()"><img src="resources/images/triangle-right.png" class="right"/></a>
+                </div>
+            </div>
+            <form ng-submit="search(queryString)" ng-hide="playing">
+                <div class="row collapse">
+                    <div class="small-10 columns">
+                        <input type="text" placeholder="Localización a buscar" ng-model="queryString">
+                    </div>
+                    <div class="small-2 columns">
+                        <a href="#" ng-click="search(queryString)" class="button postfix">Buscar</a>
+                    </div>
+                </div>
+            </form>
+            <ul>
+                <li ng-repeat="result in results">
+                    <a href="" ng-click="centerMap(result)">{{result.name}}</a>
+                </li>
+            </ul>
+            <div id="map" ng-class="{'has-map': playing && hasGeodata(), 'has-not-map': playing && !hasGeodata() }"></div>
+            <div id="markers" ng-hide="playing">
+                <ul>
+                    <li ng-repeat="marker in markers" ng-show="marker.content">
+                        <div>
+                            <span>{{marker.content}}</span>
+                            <a href="" ng-click="deleteMarker(marker)"><img src="resources/images/delete.png"/></a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="map-controls row text-center" ng-hide="playing">
+                <div class="small-4 columns">
+                    <a href="" ng-click="start()" ng-disabled="geodataCaptured" class="button">Inicio</a>
+                </div>
+                <div class="small-4 columns">
+                    <a href="" ng-click="addMarker(queryString)" ng-disabled="geodataCaptured"
+                       class="button round">+</a>
+                </div>
+                <div class="small-4 columns">
+                    <a href="" ng-click="end()" ng-disabled="!geodataCaptured" class="button alert">Fin</a>
+                </div>
+            </div>
+            <table class="geodata" ng-repeat="subtitle in subtitles | reverse" ng-hide="playing">
+                <thead>
+                <tr>
+                    <th id="{{subtitle.ns}}">
+                        <a href="#" ng-click="allocateSubtitle(subtitle)">
+                            #{{subtitles.length - $index - 1}} {{subtitle.ns}} {{subtitle.text}}</a>
+                    </th>
+                    <th>
+                        <a href="" ng-click="unassign(subtitle)"><img src="resources/images/delete.png"
+                                                                      ng-show="hasGeodata(subtitle)" class="right"/></a>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <img ng-src="{{getStaticMap(subtitle)}}" ng-show="hasGeodata(subtitle)" class="static-map"/>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <ol>
+                            <li ng-repeat="marker in subtitle.geodata.markers">{{marker.text}}</li>
+                        </ol>
+                    </td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/angular/angular.min.js"></script>
+<script src="bower_components/angular-resource/angular-resource.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+<script src="bower_components/checklist-model/checklist-model.js"></script>
+<script src="bower_components/angular-percentage-filter/percentage.js"></script>
+<script src="bower_components/foundation/js/foundation.min.js"></script>
+<script src="bower_components/foundation/js/foundation/foundation.slider.js"></script>
+<script src="bower_components/leaflet/dist/leaflet.js"></script>
+<script src="bower_components/ng-csv/build/ng-csv.min.js"></script>
+<script src="http://www.mapquestapi.com/sdk/leaflet/v1.s/mq-map.js?key=Fmjtd%7Cluurnua72d%2C72%3Do5-9w8xlw"></script>
+<script src="js/vendor/angular-leaflet-directive.min.js"></script>
+<script src="js/app.js"></script>
+<script src="js/controllers/compositorcontroller.js"></script>
+<script src="js/controllers/geodatanewscontroller.js"></script>
+<script src="js/values/urls.js"></script>
+<script src="js/factories/new.js"></script>
+<script src="js/factories/transformrequest.js"></script>
+<script src="js/factories/subtitles_geodata.js"></script>
+<script src="js/factories/nominatim.js"></script>
+<script src="js/factories/geodata.js"></script>
+<script src="js/factories/timer.js"></script>
+<script src="js/filters/reverse.js"></script>
+</body>
+</html>

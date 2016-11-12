@@ -1,0 +1,142 @@
+http://es.dbpedia.org/resource/Ferrol
+
+http://es.wikipedia.org/w/api.php?action=query&titles=Ferrol&format=json&prop=langlinks&redirects&llprop=url&continue=
+{
+	"continue" : {
+		"llcontinue" : "37113|en",
+		"continue" : "||"
+	},
+	"query" : {
+		"redirects" : [{
+				"from" : "Ferrol",
+				"to" : "El Ferrol"
+			}
+		],
+		"pages" : {
+			"37113" : {
+				"pageid" : 37113,
+				"ns" : 0,
+				"title" : "El Ferrol",
+				"langlinks" : [{
+						"lang" : "ar",
+						"url" : "http://ar.wikipedia.org/wiki/%D9%81%D9%8A%D8%B1%D9%88%D9%84%D8%8C_%D9%84%D8%A7_%D9%83%D8%B1%D9%88%D9%86%D9%8A%D8%A7",
+						"*" : "\u0641\u064a\u0631\u0648\u0644\u060c \u0644\u0627 \u0643\u0631\u0648\u0646\u064a\u0627"
+					}, {
+						"lang" : "ast",
+						"url" : "http://ast.wikipedia.org/wiki/Ferrol",
+						"*" : "Ferrol"
+					}, {
+						"lang" : "be",
+						"url" : "http://be.wikipedia.org/wiki/%D0%93%D0%BE%D1%80%D0%B0%D0%B4_%D0%A4%D0%B5%D1%80%D0%BE%D0%BB%D1%8C",
+						"*" : "\u0413\u043e\u0440\u0430\u0434 \u0424\u0435\u0440\u043e\u043b\u044c"
+					}, {
+						"lang" : "be-x-old",
+						"url" : "http://be-x-old.wikipedia.org/wiki/%D0%A4%D1%8D%D1%80%D0%BE%D0%BB%D1%8C",
+						"*" : "\u0424\u044d\u0440\u043e\u043b\u044c"
+					}, {
+						"lang" : "bg",
+						"url" : "http://bg.wikipedia.org/wiki/%D0%A4%D0%B5%D1%80%D0%BE%D0%BB",
+						"*" : "\u0424\u0435\u0440\u043e\u043b"
+					}, {
+						"lang" : "br",
+						"url" : "http://br.wikipedia.org/wiki/Ferrol",
+						"*" : "Ferrol"
+					}, {
+						"lang" : "bs",
+						"url" : "http://bs.wikipedia.org/wiki/Ferrol",
+						"*" : "Ferrol"
+					}, {
+						"lang" : "ca",
+						"url" : "http://ca.wikipedia.org/wiki/Ferrol",
+						"*" : "Ferrol"
+					}, {
+						"lang" : "cs",
+						"url" : "http://cs.wikipedia.org/wiki/Ferrol",
+						"*" : "Ferrol"
+					}, {
+						"lang" : "de",
+						"url" : "http://de.wikipedia.org/wiki/Ferrol",
+						"*" : "Ferrol"
+					}
+				]
+			}
+		}
+	}
+}
+
+http://es.wikipedia.org/w/api.php?action=query&titles=Ferrol&format=json&prop=langlinks&redirects&llprop=url&continue=||&llcontinue=37113|en
+{
+	"continue" : {
+		"llcontinue" : "37113|id",
+		"continue" : "||"
+	},
+	"query" : {
+		"redirects" : [{
+				"from" : "Ferrol",
+				"to" : "El Ferrol"
+			}
+		],
+		"pages" : {
+			"37113" : {
+				"pageid" : 37113,
+				"ns" : 0,
+				"title" : "El Ferrol",
+				"langlinks" : [{
+						"lang" : "en",
+						"url" : "http://en.wikipedia.org/wiki/Ferrol,_Galicia",
+						"*" : "Ferrol, Galicia"
+					}, {
+						"lang" : "eo",
+						"url" : "http://eo.wikipedia.org/wiki/Ferrol",
+						"*" : "Ferrol"
+					}, {
+						"lang" : "et",
+						"url" : "http://et.wikipedia.org/wiki/Ferrol",
+						"*" : "Ferrol"
+					}, {
+						"lang" : "eu",
+						"url" : "http://eu.wikipedia.org/wiki/Ferrol",
+						"*" : "Ferrol"
+					}, {
+						"lang" : "fi",
+						"url" : "http://fi.wikipedia.org/wiki/Ferrol",
+						"*" : "Ferrol"
+					}, {
+						"lang" : "fr",
+						"url" : "http://fr.wikipedia.org/wiki/Ferrol",
+						"*" : "Ferrol"
+					}, {
+						"lang" : "ga",
+						"url" : "http://ga.wikipedia.org/wiki/Ferrol",
+						"*" : "Ferrol"
+					}, {
+						"lang" : "gd",
+						"url" : "http://gd.wikipedia.org/wiki/Ferrol",
+						"*" : "Ferrol"
+					}, {
+						"lang" : "gl",
+						"url" : "http://gl.wikipedia.org/wiki/Ferrol",
+						"*" : "Ferrol"
+					}, {
+						"lang" : "hy",
+						"url" : "http://hy.wikipedia.org/wiki/%D5%96%D5%A5%D5%BC%D5%B8%D5%AC_(%D6%84%D5%A1%D5%B2%D5%A1%D6%84)",
+						"*" : "\u0556\u0565\u057c\u0578\u056c (\u0584\u0561\u0572\u0561\u0584)"
+					}
+				]
+			}
+		}
+	}
+}
+
+ db.mappings.find({_id: "<http://dbpedia.org/resource/Ferrol,_Galicia>"})
+ {
+        "_id" : "<http://dbpedia.org/resource/Ferrol,_Galicia>",
+        "types" : [
+                "<http://dbpedia.org/ontology/Settlement>",
+                "<http://dbpedia.org/ontology/PopulatedPlace>",
+                "<http://dbpedia.org/ontology/Wikidata:Q532>",
+                "<http://dbpedia.org/ontology/Place>",
+                "<http://schema.org/Place>",
+                "<http://www.ontologydesignpatterns.org/ont/d0.owl#Location>"
+        ]
+}

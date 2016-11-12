@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head lang="es">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluador</title>
+
+    <link rel="stylesheet" href="css/vendor/foundation.min.css">
+    <link rel="stylesheet" href="css/vendor/normalize.css">
+    <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css"/>
+    <link rel="stylesheet" href="css/app.css">
+
+    <script src="bower_components/modernizr/modernizr.js"></script>
+</head>
+<body>
+
+<div class="container" ng-controller="evaluatorcontroller">
+    <div class="row">
+        <div class="small-12 large-5 columns" ng-hide="started">
+            <h3>Informativos</h3>
+
+            <div class="list-news">
+                <label ng-repeat="new in news">
+                    <input type="checkbox" checklist-model="selectedNews" checklist-value="new"> {{new.title}}
+                </label>
+            </div>
+            <h3>Controles</h3>
+
+            <div class="controls">
+                <h4>Extractor de términos</h4>
+                <label ng-repeat="extractor in termsExtractors">
+                    <input type="checkbox" checklist-model="selectedTermsExtractors" checklist-value="extractor">
+                    {{extractor | capitalize}}
+                </label>
+
+                <h4>Geocodificación</h4>
+                <label ng-repeat="geocoding in geocodingMethods">
+                    <input type="checkbox" checklist-model="selectedGeocodingMethods" checklist-value="geocoding">
+                    {{geocoding | capitalize}}
+                </label>
+
+                <h4>Calcular bounding box</h4>
+                <label ng-repeat="bbox in bboxMethods">
+                    <input type="checkbox" checklist-model="selectedBboxMethods" checklist-value="bbox">
+                    {{bbox | bboxMethodToString}}
+                </label>
+
+                <h4>Ponderación</h4>
+                <input type="number" min="0" max="1" step="0.1" placeholder="alfa" ng-model="alpha"/>
+
+                <a href="" ng-click="start()" class="button">Comenzar</a>
+            </div>
+        </div>
+        <div class="small-12 large-7 columns">
+            <div ng-show="started">
+                <div id="info" class="panel callout radius">
+                    <p ng-hide="finished"><strong>Procesando informativo {{currentNew.title}} ({{currentNewIndex + 1}} /
+                        {{selectedNews.length}})</strong></p>
+
+                    <p ng-show="processing">
+                        Procesando subtítulos: {{((countSubtitles / totalSubtitles)*100) | number}} %
+                    </p>
+
+                    <p ng-show="validating">Validando subtítulos {{((countSubtitles / totalSubtitles)*100) | number}}
+                        %</p>
+
+                    <p ng-show="finished"><strong>Evaluación terminada.</strong></p>
+                </div>
+                <div id="map" ng-show="validating"></div>
+            </div>
+
+            <div ng-show="finished">
+                <h3>Resultados</h3>
+                <dl class="accordion" data-accordion>
+                    <dd ng-repeat="new in processedNews" class="accordion-navigation">
+                        <a ng-href="#{{new.title}}">{{new.title}}</a>
+                        <div ng-attr-id="{{new.title}}" class="content">
+                            <select
+                                    ng-model="selectedTermExtractorForResults"
+                                    ng-options="extractor | capitalize for extractor in selectedTermsExtractors"
+                            ></select>
+                            <select
+                                    ng-model="selectedGeocodingMethodForResults"
+                                    ng-options="geocoding | capitalize for geocoding in selectedGeocodingMethods"
+                            ></select>
+                            <select
+                                    ng-model="selectedBboxMethodForResults"
+                                    ng-options="bbox | bboxMethodToString for bbox in selectedBboxMethods"
+                            ></select>
+                             <a href=""
+                                ng-click="showResults(new, selectedTermExtractorForResults, selectedGeocodingMethodForResults, selectedBboxMethodForResults)"
+                                ng-show="selectedTermExtractorForResults && selectedGeocodingMethodForResults && selectedBboxMethodForResults"
+                                class="button">Mostrar</a>
+                            <a href=""
+                               class="button alert"
+                               ng-show="currentNew"
+                               type="button"
+                               ng-csv="tableData"
+                               filename="{{currentNew.title + '_' + selectedTermExtractorForResults + '_' + selectedGeocodingMethodForResults + '_' + selectedBboxMethodForResults + '.csv'}}"
+                               field-separator=";"
+                               csv-header="resultsParams()">Exportar a CSV</a>
+                        </div>
+                    </dd>
+                </dl>
+                <div id="results">
+                    <div id="chartLegend"></div>
+                    <canvas id="chart" width="2000" height="400"></canvas>
+                    <table id="datatable">
+                        <thead>
+                        <tr>
+                            <th ng-repeat="param in resultsParams()">{{param}}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="result in tableData">
+                            <td ng-repeat="prop in resultsParams()">
+                                {{result[prop]}}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/fastclick/lib/fastclick.js"></script>
+<script src="bower_components/angular/angular.min.js"></script>
+<script src="bower_components/angular-resource/angular-resource.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+<script src="bower_components/checklist-model/checklist-model.js"></script>
+<script src="bower_components/foundation/js/foundation.min.js"></script>
+<script src="bower_components/foundation/js/foundation/foundation.tab.js"></script>
+<script src="bower_components/leaflet/dist/leaflet.js"></script>
+<script src="bower_components/async/lib/async.js"></script>
+<script src="bower_components/angular-percentage-filter/percentage.js"></script>
+<script src="bower_components/jsts/lib/javascript.util.js"></script>
+<script src="bower_components/jsts/lib/jsts.js"></script>
+<script src="bower_components/chartjs/Chart.min.js"></script>
+<script src="bower_components/ng-csv/build/ng-csv.min.js"></script>
+<script src="js/app.js"></script>
+<script src="js/controllers/evaluatorcontroller.js"></script>
+<script src="js/controllers/geodatanewscontroller.js"></script>
+<script src="js/values/urls.js"></script>
+<script src="js/factories/new.js"></script>
+<script src="js/factories/transformrequest.js"></script>
+<script src="js/factories/subtitles.js"></script>
+<script src="js/factories/subtitles_geodata.js"></script>
+<script src="js/factories/augmented_information.js"></script>
+<script src="js/factories/nominatim.js"></script>
+<script src="js/factories/geodata.js"></script>
+<script src="js/factories/timer.js"></script>
+<script src="js/factories/geometric_utils.js"></script>
+<script src="js/factories/processor.js"></script>
+<script src="js/filters/reverse.js"></script>
+<script src="js/filters/capitalize.js"></script>
+<script src="js/filters/bboxmethodtostring.js"></script>
+<script>
+    $(document).foundation();
+</script>
+</body>
+</html>

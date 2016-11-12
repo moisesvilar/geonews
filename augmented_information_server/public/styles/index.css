@@ -1,0 +1,29 @@
+body {
+    color: #6e6e6e;
+    background:transparent;
+}
+
+p {
+    text-align: justify;
+}
+
+.container {
+    float:left;
+    background: white url('../resources/img/citius.png') no-repeat left top;
+    padding-top: 80px;
+    padding-bottom: 50px;
+    padding-left: 65px;
+    padding-right: 100px;
+    width:100%;
+    position: absolute;
+    bottom: 0;
+}
+
+h2 {
+    font-family: 'Rokkitt', serif;
+}
+
+.red-button {
+    text-transform: uppercase;
+    color: #801515;
+}

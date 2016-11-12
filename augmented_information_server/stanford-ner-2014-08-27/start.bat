@@ -1,0 +1,1 @@
+java -mx1000m -cp stanford-ner-with-spanish-classifier.jar edu.stanford.nlp.ie.NERServer -port 2121 -loadClassifier classifiers/spanish.ancora.distsim.s512.crf.ser.gz

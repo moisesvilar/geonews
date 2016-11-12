@@ -1,0 +1,25 @@
+{
+  "name": "subtitle_generator",
+  "version": "0.0.0",
+  "description": "Subtitle generator from videos stored at rtve.es/alacarta/videos/telediario/ to the HbbTV augmented information application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "hbbtv",
+    "subtitle",
+    "json",
+    "rtve",
+    "citius",
+    "cograde"
+  ],
+  "author": "Moises Vilar",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^0.17.0",
+    "jasmine-expect": "^1.22.2",
+    "line-by-line": "^0.1.1",
+    "request": "^2.45.0"
+  }
+}

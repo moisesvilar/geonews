@@ -1,0 +1,12 @@
+body {
+    background: transparent url('../resources/img/bg.jpg') no-repeat left top;
+}
+
+#map {
+    width: 553px;
+    height: 300px;
+    z-index: 1;
+    position: absolute;
+    top: 350px;
+    left:600px;
+}

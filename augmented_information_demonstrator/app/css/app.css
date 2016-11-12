@@ -1,0 +1,104 @@
+@import url(http://fonts.googleapis.com/css?family=Domine:400,700&subset=latin,latin-ext);
+@import url(http://fonts.googleapis.com/css?family=Fjalla+One&subset=latin,latin-ext);
+
+body {
+    font-family: 'Fjalla One', sans-serif;
+}
+
+.container{
+    margin-top: 20px;
+}
+.subtitles {
+    width: 100%;
+    min-width: 100%;
+}
+
+.subtitles>.panel {
+    display: inline;
+}
+
+.subtitles>.panel>p {
+    display: inline;
+}
+
+.list-news {
+    overflow: auto;
+    max-height: 400px;
+    margin: 10px 10px 10px 10px;
+}
+
+.controls {
+    margin: 10px 10px 10px 10px;
+}
+
+.map-controls {
+    margin: 10px 0px 10px 0px;
+}
+
+.geodata {
+    margin-top: 10px;
+    border: 3px solid #71B8F2;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.static-map {
+    display: block;
+}
+
+.popup {
+    width: 200px;
+}
+
+.has-map {
+    border: 2px solid dodgerblue;
+    border-radius: 10px;
+}
+
+.has-not-map {
+    border: 2px solid darkred;
+    border-radius: 10px;
+}
+
+#map {
+    margin: 10px 0px 10px 0px;
+    height: 300px;
+    width: 100%;
+}
+
+#subtitle {
+    margin: 5px 5px 0px 5px;
+    padding: 2px 2px 0px 2px;
+}
+
+header {
+    background-color: darkorange;
+    border: 2px solid black;
+    border-radius: 10px;
+    margin-bottom: 5px;
+}
+
+header>h1 {
+    color: floralwhite;
+    text-shadow:
+        1px 1px 0 black,
+        -1px -1px 0 black,
+        1px -1px 0 black,
+        -1px 1px 0 black,
+        1px 1px 0 black;
+    text-align: center;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Domine', serif;
+}
+
+.accordion .button {
+    margin-top: 10px;
+}
+
+#chart {
+    margin: 10px 0px 10px 0px;
+    height: 400px;
+    width: 600px;
+}
